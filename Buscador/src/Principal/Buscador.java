@@ -419,11 +419,15 @@ public class Buscador extends javax.swing.JFrame {
     private void btnFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroActionPerformed
         condiciones_para_ER();
         ER = Pattern.compile(expresionRegular);
+        historial.setText(historial.getText()+"\n"+expresionRegular+" (Desde "+directorioInicio+")");
+        label_resultado.setText("Buscando...");
+        // Construcción de la expresión regular
+        ER = Pattern.compile(expresionRegular);
+        iniciarTabla();
+        buscar_archivos(new File(directorioInicio));
+        label_resultado.setText("Búsqueda finalizada. Se encontraron "+tablaModel.getRowCount()+" registro(s).");
         campo_busqueda.setText(expresionRegular.trim());
-        tablaModel = new DefaultTableModel();
-        tablaModel.addColumn("Nombre");
-        tablaModel.addColumn("Direccion");
-        tabla_encontrados.setModel(tablaModel);
+        
         buscar_archivos(new File(directorioInicio));
     }//GEN-LAST:event_btnFiltroActionPerformed
 
