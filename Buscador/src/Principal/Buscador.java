@@ -49,6 +49,7 @@ public class Buscador extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (contadorReloj >= 1) {
                     reloj.stop();
+                    if(campo_busqueda.getText().trim().length()!= 0){
                     expresionRegular = ".*" + campo_busqueda.getText().trim() + ".*";
                     historial.setText(historial.getText()+"\n"+expresionRegular+" (Desde "+directorioInicio+")");
                     label_resultado.setText("Buscando...");
@@ -57,6 +58,7 @@ public class Buscador extends javax.swing.JFrame {
                     iniciarTabla();
                     buscar_archivos(new File(directorioInicio));
                     label_resultado.setText("Búsqueda finalizada. Se encontraron "+tablaModel.getRowCount()+" registro(s).");
+                    }
                 }
                 contadorReloj++;
             }
@@ -416,6 +418,7 @@ public class Buscador extends javax.swing.JFrame {
 
     private void btnFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroActionPerformed
         condiciones_para_ER();
+        ER = Pattern.compile(expresionRegular);
         campo_busqueda.setText(expresionRegular.trim());
         tablaModel = new DefaultTableModel();
         tablaModel.addColumn("Nombre");
@@ -458,17 +461,17 @@ public class Buscador extends javax.swing.JFrame {
         }else if (!check_empieza.isSelected() && txtExtencion.getText().trim().length()!=0 && txtContiene.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//contiene y extencion
             expresionRegular = ".*" + txtContiene.getText().trim() + ".*\\." + txtExtencion.getText().trim();
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtContiene.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && !check_extension.isSelected()) {//empieza, contiene y termina
-            expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtExtencion.getText().trim() + ".*" + txtTermina.getText().trim() + "(\\..*)?";
+            expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "(\\..*)?";
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && !check_contiene.isSelected() && check_extension.isSelected()) {//empieza, termina y extencion
             expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtTermina.getText().trim() + "\\.*" + txtExtencion.getText().trim();
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0&& txtContiene.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//empieza, contiene y extencion
-            expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtContiene.getText().trim() + ".*"  + "\\." + txtExtencion;
+            expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtContiene.getText().trim() + ".*"  + "\\." + txtExtencion.getText().trim();
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//termina, contiene y extencion
-            expresionRegular =  ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion;
+            expresionRegular =  ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//termina, contiene y extencion
-            expresionRegular =  ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion;
+            expresionRegular =  ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
         }else if (check_empieza.isSelected() && txtContiene.getText().trim().length()!=0 && txtEmpieza.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//empieza, termina, contiene y extencion
-            expresionRegular =  txtEmpieza.getText().trim() + ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion;
+            expresionRegular =  txtEmpieza.getText().trim() + ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
         }
     }
     /**
