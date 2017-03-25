@@ -8,7 +8,10 @@ package Principal;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +37,7 @@ public class Buscador extends javax.swing.JFrame {
     private Matcher evaluador;
     private Timer reloj;
     private int contadorReloj = 0;
-    private String directorioInicio, expresionRegular;
+    private String directorioInicio, expresionRegular,rutaEvaluar;
     private DefaultTableModel tablaModel;
     
     /**
@@ -43,6 +46,7 @@ public class Buscador extends javax.swing.JFrame {
     public Buscador() {
         initComponents();
         iniciarTabla();
+        rutaEvaluar = "";
         historial.setText("Historial.");
         reloj = new Timer(1000, new ActionListener() {
             @Override
@@ -168,6 +172,7 @@ public class Buscador extends javax.swing.JFrame {
         label_resultado = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         ejecutar_archivo = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -256,6 +261,13 @@ public class Buscador extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -275,6 +287,8 @@ public class Buscador extends javax.swing.JFrame {
                             .addComponent(label_directorio)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(label_resultado)
+                                .addGap(163, 163, 163)
+                                .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ejecutar_archivo)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,7 +360,8 @@ public class Buscador extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(label_resultado)
-                            .addComponent(ejecutar_archivo))
+                            .addComponent(ejecutar_archivo)
+                            .addComponent(jButton1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3)))
                 .addGap(9, 9, 9))
@@ -417,18 +432,23 @@ public class Buscador extends javax.swing.JFrame {
     }//GEN-LAST:event_check_extensionStateChanged
 
     private void btnFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroActionPerformed
-        condiciones_para_ER();
-        ER = Pattern.compile(expresionRegular);
-        historial.setText(historial.getText()+"\n"+expresionRegular+" (Desde "+directorioInicio+")");
-        label_resultado.setText("Buscando...");
-        // Construcción de la expresión regular
-        ER = Pattern.compile(expresionRegular);
-        iniciarTabla();
-        buscar_archivos(new File(directorioInicio));
-        label_resultado.setText("Búsqueda finalizada. Se encontraron "+tablaModel.getRowCount()+" registro(s).");
-        campo_busqueda.setText(expresionRegular.trim());
-        
-        buscar_archivos(new File(directorioInicio));
+        try {
+            condiciones_para_ER();
+            ER = Pattern.compile(expresionRegular);
+            historial.setText(historial.getText()+"\n"+expresionRegular+" (Desde "+directorioInicio+")");
+            label_resultado.setText("Buscando...");
+            // Construcción de la expresión regular
+            ER = Pattern.compile(expresionRegular);
+            iniciarTabla();
+            // buscar_archivos(new File(directorioInicio));
+            mostrar_archivos();
+            label_resultado.setText("Búsqueda finalizada. Se encontraron "+tablaModel.getRowCount()+" registro(s).");
+            campo_busqueda.setText(expresionRegular.trim());
+            
+          //  buscar_archivos(new File(directorioInicio));
+        } catch (IOException ex) {
+            Logger.getLogger(Buscador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnFiltroActionPerformed
 
     private void ejecutar_archivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutar_archivoActionPerformed
@@ -441,11 +461,23 @@ public class Buscador extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ejecutar_archivoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Thread a;
+        try {
+            a = new Archivos();
+             a.start();
+        } catch (IOException ex) {
+            Logger.getLogger(Buscador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }//GEN-LAST:event_jButton1ActionPerformed
     
     private void condiciones_para_ER(){
         expresionRegular = "";
         if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0 && !check_termina.isSelected() && !check_contiene.isSelected() && !check_extension.isSelected()) { //Solo empieza
             expresionRegular = txtEmpieza.getText().trim() + ".*";
+            condicion_archivo(txtEmpieza.getText().trim().substring(0,1));
         }else if (!check_empieza.isSelected() && txtTermina.getText().trim().length()!=0 && check_termina.isSelected() && !check_contiene.isSelected() && !check_extension.isSelected()) {//solo termina
             expresionRegular = ".*" + txtTermina.getText().trim() + "(\\..*)?";
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && !check_extension.isSelected()) {//solo contiene
@@ -478,6 +510,126 @@ public class Buscador extends javax.swing.JFrame {
             expresionRegular =  txtEmpieza.getText().trim() + ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
         }
     }
+    //aplicacion de la creacion de todos los archivos
+    public void mostrar_archivos() throws FileNotFoundException, IOException{
+        File archivo = new File(rutaEvaluar);
+        FileReader ruta = new FileReader(archivo);
+        BufferedReader leer = new BufferedReader(ruta);
+        String prueba = leer.readLine();
+        while(prueba != null){
+             File Ruta = new File(prueba);
+             String nombreArchivo = Ruta.getName();
+             System.out.println(prueba);
+             evaluador = ER.matcher(nombreArchivo);
+             if (evaluador.matches()) {
+                 System.out.println("entro");
+                tablaModel.addRow(new String[]{nombreArchivo,
+                Ruta.getAbsolutePath(),
+                getFechaCreacion(Ruta),
+                getFechaModificacion(Ruta),
+                getTamaño(Ruta),
+                getTipo(Ruta)
+            });
+        }
+         prueba = leer.readLine();
+        }
+//        try {
+//            if(!archivo.getAbsolutePath().contains("$Recycle.Bin") && archivo.isDirectory()) {
+//                File[] subdirectorio = archivo.listFiles();
+//                for (File subdirectorio1 : subdirectorio) {
+//                    buscar_archivos(subdirectorio1);
+//                }
+//            }
+//        } catch (Exception e) {}
+    }
+    
+    //Se obtiene la ruta a donde se van a buscar los archivos
+    public void condicion_archivo(String evaluar){
+        if(evaluar.equals("a")|| evaluar.equals("A")){
+           rutaEvaluar = Archivos.IA;
+        }
+        else if(evaluar.equals("b")|| evaluar.equals("B")){
+           rutaEvaluar = Archivos.IB; 
+        }
+        else if(evaluar.equals("c")|| evaluar.equals("C")){
+           rutaEvaluar = Archivos.IC; 
+        }
+        else if(evaluar.equals("d")|| evaluar.equals("D")){
+           rutaEvaluar = Archivos.ID; 
+        }
+        else if(evaluar.equals("e")|| evaluar.equals("E")){
+           rutaEvaluar = Archivos.IE; 
+        }
+        else if(evaluar.equals("f")|| evaluar.equals("F")){
+           rutaEvaluar = Archivos.IF; 
+        }
+        else if(evaluar.equals("g")|| evaluar.equals("G")){
+           rutaEvaluar = Archivos.IG; 
+        }
+        else if(evaluar.equals("h")|| evaluar.equals("H")){
+           rutaEvaluar = Archivos.IH; 
+        }
+        else if(evaluar.equals("i")|| evaluar.equals("I")){
+           rutaEvaluar = Archivos.II; 
+        }
+        else if(evaluar.equals("j")|| evaluar.equals("J")){
+           rutaEvaluar = Archivos.IJ; 
+        }
+        else if(evaluar.equals("k")|| evaluar.equals("K")){
+           rutaEvaluar = Archivos.IK; 
+        }
+        else if(evaluar.equals("l")|| evaluar.equals("L")){
+           rutaEvaluar = Archivos.IL; 
+        }
+        else if(evaluar.equals("m")|| evaluar.equals("M")){
+           rutaEvaluar = Archivos.IM; 
+        }
+        else if(evaluar.equals("n")|| evaluar.equals("N")){
+           rutaEvaluar = Archivos.IN; 
+        }
+        else if(evaluar.equals("ñ")|| evaluar.equals("Ñ")){
+           rutaEvaluar = Archivos.IÑ; 
+        }
+        else if(evaluar.equals("o")|| evaluar.equals("O")){
+           rutaEvaluar = Archivos.IO; 
+        }
+        else if(evaluar.equals("p")|| evaluar.equals("P")){
+           rutaEvaluar = Archivos.IP; 
+        }
+        else if(evaluar.equals("q")|| evaluar.equals("Q")){
+           rutaEvaluar = Archivos.IQ; 
+        }
+        else if(evaluar.equals("r")|| evaluar.equals("R")){
+           rutaEvaluar = Archivos.IR; 
+        }
+        else if(evaluar.equals("s")|| evaluar.equals("S")){
+           rutaEvaluar = Archivos.IS; 
+        }
+        else if(evaluar.equals("t")|| evaluar.equals("T")){
+           rutaEvaluar = Archivos.IT; 
+        }
+        else if(evaluar.equals("u")|| evaluar.equals("U")){
+           rutaEvaluar = Archivos.IU; 
+        }
+        else if(evaluar.equals("v")|| evaluar.equals("V")){
+           rutaEvaluar = Archivos.IV; 
+        }
+        else if(evaluar.equals("w")|| evaluar.equals("W")){
+           rutaEvaluar = Archivos.IW; 
+        }
+        else if(evaluar.equals("x")|| evaluar.equals("X")){
+           rutaEvaluar = Archivos.IX; 
+        }
+        else if(evaluar.equals("y")|| evaluar.equals("Y")){
+           rutaEvaluar = Archivos.IY; 
+        }
+        else if(evaluar.equals("z")|| evaluar.equals("Z")){
+           rutaEvaluar = Archivos.IZ; 
+        }
+        
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -523,6 +675,7 @@ public class Buscador extends javax.swing.JFrame {
     private javax.swing.JCheckBox check_termina;
     private javax.swing.JButton ejecutar_archivo;
     private javax.swing.JTextArea historial;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
