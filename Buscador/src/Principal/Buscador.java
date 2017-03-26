@@ -477,37 +477,66 @@ public class Buscador extends javax.swing.JFrame {
         expresionRegular = "";
         if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0 && !check_termina.isSelected() && !check_contiene.isSelected() && !check_extension.isSelected()) { //Solo empieza
             expresionRegular = txtEmpieza.getText().trim() + ".*";
-            condicion_archivo(txtEmpieza.getText().trim().substring(0,1));
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (!check_empieza.isSelected() && txtTermina.getText().trim().length()!=0 && check_termina.isSelected() && !check_contiene.isSelected() && !check_extension.isSelected()) {//solo termina
             expresionRegular = ".*" + txtTermina.getText().trim() + "(\\..*)?";
+            String nombre = txtTermina.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && !check_extension.isSelected()) {//solo contiene
             expresionRegular = ".*" + txtContiene.getText().trim() + ".*";
+            condicion_archivo_contiene(txtContiene.getText().trim().substring(0,1));
         }else if (!check_empieza.isSelected() && txtExtencion.getText().trim().length()!=0 && !check_termina.isSelected() && !check_contiene.isSelected() && check_extension.isSelected()) {//solo extencion
             expresionRegular = ".*\\." + txtExtencion.getText().trim();
+            String nombre = txtExtencion.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0 && txtTermina.getText().trim().length()!=0 && check_termina.isSelected() && !check_contiene.isSelected() && !check_extension.isSelected()) {// empieza y termina
             expresionRegular = txtEmpieza.getText().trim() + ".*" + txtTermina.getText().trim() + "(\\..*)?";
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0 && txtContiene.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && !check_extension.isSelected()) {// empieza y contiene
             expresionRegular = txtEmpieza.getText().trim() + ".*" + txtContiene.getText().trim() + ".*(\\..*)?";
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && !check_termina.isSelected() && !check_contiene.isSelected() && check_extension.isSelected()) {// empieza y extencion
             expresionRegular = txtEmpieza.getText().trim() + ".*\\." + txtExtencion.getText().trim();
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0 && txtTermina.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && !check_extension.isSelected()) {//termina y contiene
             expresionRegular = ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "(\\..*)?";
+            String nombre = txtTermina.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (!check_empieza.isSelected() && txtExtencion.getText().trim().length()!=0 && txtTermina.getText().trim().length()!=0 && check_termina.isSelected() && !check_contiene.isSelected() && check_extension.isSelected()) {//termina y extencion
             expresionRegular = ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
+            String nombre = txtTermina.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (!check_empieza.isSelected() && txtExtencion.getText().trim().length()!=0 && txtContiene.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//contiene y extencion
             expresionRegular = ".*" + txtContiene.getText().trim() + ".*\\." + txtExtencion.getText().trim();
+            String nombre = txtExtencion.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtContiene.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && !check_extension.isSelected()) {//empieza, contiene y termina
             expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "(\\..*)?";
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && !check_contiene.isSelected() && check_extension.isSelected()) {//empieza, termina y extencion
             expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtTermina.getText().trim() + "\\.*" + txtExtencion.getText().trim();
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (check_empieza.isSelected() && txtEmpieza.getText().trim().length()!=0&& txtContiene.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && !check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//empieza, contiene y extencion
             expresionRegular = txtEmpieza.getText().trim()+ ".*" + txtContiene.getText().trim() + ".*"  + "\\." + txtExtencion.getText().trim();
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//termina, contiene y extencion
             expresionRegular =  ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
+            String nombre = txtTermina.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (!check_empieza.isSelected() && txtContiene.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//termina, contiene y extencion
             expresionRegular =  ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
+            String nombre = txtTermina.getText().trim();
+            int tamaño = nombre.length();
+            condicion_archivo_final(nombre.substring(tamaño-1, tamaño));
         }else if (check_empieza.isSelected() && txtContiene.getText().trim().length()!=0 && txtEmpieza.getText().trim().length()!=0&& txtTermina.getText().trim().length()!=0 && txtExtencion.getText().trim().length()!=0 && check_termina.isSelected() && check_contiene.isSelected() && check_extension.isSelected()) {//empieza, termina, contiene y extencion
             expresionRegular =  txtEmpieza.getText().trim() + ".*" + txtContiene.getText().trim() + ".*" + txtTermina.getText().trim() + "\\." + txtExtencion.getText().trim();
+            condicion_archivo_inicial(txtEmpieza.getText().trim().substring(0,1));
         }
     }
     //aplicacion de la creacion de todos los archivos
@@ -544,7 +573,7 @@ public class Buscador extends javax.swing.JFrame {
     }
     
     //Se obtiene la ruta a donde se van a buscar los archivos
-    public void condicion_archivo(String evaluar){
+    public void condicion_archivo_inicial(String evaluar){
         if(evaluar.equals("a")|| evaluar.equals("A")){
            rutaEvaluar = Archivos.IA;
         }
@@ -625,10 +654,177 @@ public class Buscador extends javax.swing.JFrame {
         }
         else if(evaluar.equals("z")|| evaluar.equals("Z")){
            rutaEvaluar = Archivos.IZ; 
-        }
-        
+        }   
     }
     
+    
+    public void condicion_archivo_final(String evaluar){
+        if(evaluar.equals("a")|| evaluar.equals("A")){
+           rutaEvaluar = Archivos.FA;
+        }
+        else if(evaluar.equals("b")|| evaluar.equals("B")){
+           rutaEvaluar = Archivos.FB; 
+        }
+        else if(evaluar.equals("c")|| evaluar.equals("C")){
+           rutaEvaluar = Archivos.FC; 
+        }
+        else if(evaluar.equals("d")|| evaluar.equals("D")){
+           rutaEvaluar = Archivos.FD; 
+        }
+        else if(evaluar.equals("e")|| evaluar.equals("E")){
+           rutaEvaluar = Archivos.FE; 
+        }
+        else if(evaluar.equals("f")|| evaluar.equals("F")){
+           rutaEvaluar = Archivos.FF; 
+        }
+        else if(evaluar.equals("g")|| evaluar.equals("G")){
+           rutaEvaluar = Archivos.FG; 
+        }
+        else if(evaluar.equals("h")|| evaluar.equals("H")){
+           rutaEvaluar = Archivos.FH; 
+        }
+        else if(evaluar.equals("i")|| evaluar.equals("I")){
+           rutaEvaluar = Archivos.FI; 
+        }
+        else if(evaluar.equals("j")|| evaluar.equals("J")){
+           rutaEvaluar = Archivos.FJ; 
+        }
+        else if(evaluar.equals("k")|| evaluar.equals("K")){
+           rutaEvaluar = Archivos.FK; 
+        }
+        else if(evaluar.equals("l")|| evaluar.equals("L")){
+           rutaEvaluar = Archivos.FL; 
+        }
+        else if(evaluar.equals("m")|| evaluar.equals("M")){
+           rutaEvaluar = Archivos.FM; 
+        }
+        else if(evaluar.equals("n")|| evaluar.equals("N")){
+           rutaEvaluar = Archivos.FN; 
+        }
+        else if(evaluar.equals("ñ")|| evaluar.equals("Ñ")){
+           rutaEvaluar = Archivos.FÑ; 
+        }
+        else if(evaluar.equals("o")|| evaluar.equals("O")){
+           rutaEvaluar = Archivos.FO; 
+        }
+        else if(evaluar.equals("p")|| evaluar.equals("P")){
+           rutaEvaluar = Archivos.FP; 
+        }
+        else if(evaluar.equals("q")|| evaluar.equals("Q")){
+           rutaEvaluar = Archivos.FQ; 
+        }
+        else if(evaluar.equals("r")|| evaluar.equals("R")){
+           rutaEvaluar = Archivos.FR; 
+        }
+        else if(evaluar.equals("s")|| evaluar.equals("S")){
+           rutaEvaluar = Archivos.FS; 
+        }
+        else if(evaluar.equals("t")|| evaluar.equals("T")){
+           rutaEvaluar = Archivos.FT; 
+        }
+        else if(evaluar.equals("u")|| evaluar.equals("U")){
+           rutaEvaluar = Archivos.FU; 
+        }
+        else if(evaluar.equals("v")|| evaluar.equals("V")){
+           rutaEvaluar = Archivos.FV; 
+        }
+        else if(evaluar.equals("w")|| evaluar.equals("W")){
+           rutaEvaluar = Archivos.FW; 
+        }
+        else if(evaluar.equals("x")|| evaluar.equals("X")){
+           rutaEvaluar = Archivos.FX; 
+        }
+        else if(evaluar.equals("y")|| evaluar.equals("Y")){
+           rutaEvaluar = Archivos.FY; 
+        }
+        else if(evaluar.equals("z")|| evaluar.equals("Z")){
+           rutaEvaluar = Archivos.FZ; 
+        }   
+    }
+    
+    public void condicion_archivo_contiene(String evaluar){
+        if(evaluar.equals("a")|| evaluar.equals("A")){
+           rutaEvaluar = Archivos.CA;
+        }
+        else if(evaluar.equals("b")|| evaluar.equals("B")){
+           rutaEvaluar = Archivos.CB; 
+        }
+        else if(evaluar.equals("c")|| evaluar.equals("C")){
+           rutaEvaluar = Archivos.CC; 
+        }
+        else if(evaluar.equals("d")|| evaluar.equals("D")){
+           rutaEvaluar = Archivos.CD; 
+        }
+        else if(evaluar.equals("e")|| evaluar.equals("E")){
+           rutaEvaluar = Archivos.CE; 
+        }
+        else if(evaluar.equals("f")|| evaluar.equals("F")){
+           rutaEvaluar = Archivos.CF; 
+        }
+        else if(evaluar.equals("g")|| evaluar.equals("G")){
+           rutaEvaluar = Archivos.CG; 
+        }
+        else if(evaluar.equals("h")|| evaluar.equals("H")){
+           rutaEvaluar = Archivos.CH; 
+        }
+        else if(evaluar.equals("i")|| evaluar.equals("I")){
+           rutaEvaluar = Archivos.CI; 
+        }
+        else if(evaluar.equals("j")|| evaluar.equals("J")){
+           rutaEvaluar = Archivos.CJ; 
+        }
+        else if(evaluar.equals("k")|| evaluar.equals("K")){
+           rutaEvaluar = Archivos.CK; 
+        }
+        else if(evaluar.equals("l")|| evaluar.equals("L")){
+           rutaEvaluar = Archivos.CL; 
+        }
+        else if(evaluar.equals("m")|| evaluar.equals("M")){
+           rutaEvaluar = Archivos.CM; 
+        }
+        else if(evaluar.equals("n")|| evaluar.equals("N")){
+           rutaEvaluar = Archivos.CN; 
+        }
+        else if(evaluar.equals("ñ")|| evaluar.equals("Ñ")){
+           rutaEvaluar = Archivos.CÑ; 
+        }
+        else if(evaluar.equals("o")|| evaluar.equals("O")){
+           rutaEvaluar = Archivos.CO; 
+        }
+        else if(evaluar.equals("p")|| evaluar.equals("P")){
+           rutaEvaluar = Archivos.CP; 
+        }
+        else if(evaluar.equals("q")|| evaluar.equals("Q")){
+           rutaEvaluar = Archivos.CQ; 
+        }
+        else if(evaluar.equals("r")|| evaluar.equals("R")){
+           rutaEvaluar = Archivos.CR; 
+        }
+        else if(evaluar.equals("s")|| evaluar.equals("S")){
+           rutaEvaluar = Archivos.CS; 
+        }
+        else if(evaluar.equals("t")|| evaluar.equals("T")){
+           rutaEvaluar = Archivos.CT; 
+        }
+        else if(evaluar.equals("u")|| evaluar.equals("U")){
+           rutaEvaluar = Archivos.CU; 
+        }
+        else if(evaluar.equals("v")|| evaluar.equals("V")){
+           rutaEvaluar = Archivos.CV; 
+        }
+        else if(evaluar.equals("w")|| evaluar.equals("W")){
+           rutaEvaluar = Archivos.CW; 
+        }
+        else if(evaluar.equals("x")|| evaluar.equals("X")){
+           rutaEvaluar = Archivos.CX; 
+        }
+        else if(evaluar.equals("y")|| evaluar.equals("Y")){
+           rutaEvaluar = Archivos.CY; 
+        }
+        else if(evaluar.equals("z")|| evaluar.equals("Z")){
+           rutaEvaluar = Archivos.CZ; 
+        }   
+    }
     
     /**
      * @param args the command line arguments
